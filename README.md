@@ -60,12 +60,22 @@ Workers:
 
 ## Screenshots
 
+### Mobile app
 | | |
 |--|--|
 | Role select | ![Role select](docs/screenshots/01-role-select.png) |
 | Home | ![Home](docs/screenshots/02-home.png) |
 | Join active hunt | ![Join active hunt](docs/screenshots/03-join-active-hunt.png) |
 | Active hunt + map / QR | ![Active hunt map](docs/screenshots/04-active-hunt-map.jpg) |
+
+### Admin panel
+| | |
+|--|--|
+| Dashboard | ![Admin dashboard](docs/screenshots/05-admin-dashboard.png) |
+| Hunts | ![Admin hunts](docs/screenshots/06-admin-hunts.png) |
+| Areas | ![Admin areas](docs/screenshots/07-admin-areas.png) |
+| Alert types | ![Admin alert types](docs/screenshots/08-admin-alert-types.png) |
+| Broadcast | ![Admin broadcast](docs/screenshots/09-admin-broadcast.png) |
 
 
 ## Core domain features
