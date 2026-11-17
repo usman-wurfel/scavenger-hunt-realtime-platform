@@ -60,22 +60,13 @@ Workers:
 
 ## Screenshots
 
-### Mobile experience
 | | |
 |--|--|
-| App overview | ![Mobile app](docs/screenshots/01-mobile-app.png) |
-| Hunt flow | ![Hunt flow](docs/screenshots/02-mobile-hunt-flow.png) |
-| Map / alerts | ![Map alerts](docs/screenshots/03-mobile-map-alerts.png) |
+| Role select | ![Role select](docs/screenshots/01-role-select.png) |
+| Home | ![Home](docs/screenshots/02-home.png) |
+| Join active hunt | ![Join active hunt](docs/screenshots/03-join-active-hunt.png) |
+| Active hunt + map / QR | ![Active hunt map](docs/screenshots/04-active-hunt-map.jpg) |
 
-### Admin panel
-| | |
-|--|--|
-| Dashboard | ![Dashboard](docs/screenshots/05-admin-dashboard.png) |
-| Hunts | ![Hunts](docs/screenshots/06-admin-hunts.png) |
-| Areas | ![Areas](docs/screenshots/07-admin-areas.png) |
-| Alert types | ![Alert types](docs/screenshots/08-admin-alert-types.png) |
-
----
 
 ## Core domain features
 
@@ -242,5 +233,3 @@ Or full stack:
 ```bash
 docker compose up -d
 ```
-
-Default seeded admin (local): `admin@gmail.com` / `admin1`
