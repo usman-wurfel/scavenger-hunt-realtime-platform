@@ -1,0 +1,8 @@
+{
+  "watch": ["src", "prisma", "next.config.mjs", ".env"],
+  "ext": "ts,tsx,js,mjs,json,prisma,css",
+  "ignore": [".next", "node_modules", "public/uploads"],
+  "exec": "bash scripts/dev-server.sh",
+  "signal": "SIGTERM",
+  "delay": 800
+}

@@ -1,0 +1,60 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy full stack to production
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push')
+
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          port: 22
+          script_stop: true
+          command_timeout: 40m
+          script: |
+            set -euo pipefail
+            cd /var/www/html
+
+            echo "==> Fetching latest main"
+            git fetch origin main
+            git checkout main
+            git pull origin main
+
+            echo "==> Rebuilding ALL compose services"
+            export DOCKER_BUILDKIT=1
+            docker compose build
+
+            echo "==> Refreshing full stack (postgres/redis/emqx/app/workers)"
+            echo "    Volumes are kept — database data is NOT wiped"
+            docker compose up -d --remove-orphans --force-recreate
+
+            echo "==> Waiting for app to settle"
+            sleep 45
+
+            echo "==> Status"
+            docker compose ps
+
+            echo "==> App logs (last 80 lines)"
+            docker compose logs --tail=80 app || true
+
+            echo "==> Deploy finished"

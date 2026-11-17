@@ -1,0 +1,95 @@
+/* Swagger API docs: always light code blocks (beats swagger dark-mode !important rules) */
+.swagger-docs-light .swagger-ui .opblock .highlight-code pre.microlight,
+.swagger-docs-light .swagger-ui .opblock pre.microlight,
+.swagger-docs-light .swagger-ui .opblock-body pre.microlight,
+.swagger-docs-light .swagger-ui .opblock .highlight-code,
+.swagger-docs-light .swagger-ui pre,
+.swagger-docs-light .swagger-ui code,
+.swagger-docs-light .swagger-ui pre.microlight,
+.swagger-docs-light .swagger-ui .microlight,
+.swagger-docs-light .swagger-ui .highlight-code,
+.swagger-docs-light .swagger-ui textarea,
+.swagger-docs-light .swagger-ui textarea.curl,
+.swagger-docs-light .swagger-ui .curl-command,
+.swagger-docs-light .swagger-ui .responses-inner .curl,
+.swagger-docs-light .swagger-ui .request-url,
+.swagger-docs-light .swagger-ui .request-url pre,
+.swagger-docs-light .swagger-ui .responses-inner pre,
+.swagger-docs-light .swagger-ui .response pre,
+.swagger-docs-light .swagger-ui .live-responses-table pre,
+html.dark .swagger-docs-light .swagger-ui .opblock .highlight-code pre.microlight,
+html.dark .swagger-docs-light .swagger-ui .opblock pre.microlight,
+html.dark .swagger-docs-light .swagger-ui .opblock-body pre.microlight,
+html.dark .swagger-docs-light .swagger-ui textarea,
+html.dark .swagger-docs-light .swagger-ui textarea.curl,
+html.dark .swagger-docs-light .swagger-ui pre.microlight,
+html.dark-mode .swagger-docs-light .swagger-ui .opblock .highlight-code pre.microlight,
+html.dark-mode .swagger-docs-light .swagger-ui .opblock pre.microlight,
+html.dark-mode .swagger-docs-light .swagger-ui .opblock-body pre.microlight,
+html.dark-mode .swagger-docs-light .swagger-ui textarea,
+html.dark-mode .swagger-docs-light .swagger-ui textarea.curl,
+html.dark-mode .swagger-docs-light .swagger-ui pre.microlight {
+  background: #f6f8fa !important;
+  background-color: #f6f8fa !important;
+  color: #24292e !important;
+  -webkit-text-fill-color: #24292e !important;
+  caret-color: #24292e !important;
+  border: 1px solid #e1e4e8 !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  font-weight: 400 !important;
+}
+
+.swagger-docs-light .swagger-ui .highlight-code,
+.swagger-docs-light .swagger-ui .curl-command,
+.swagger-docs-light .swagger-ui .responses-inner .curl {
+  padding: 12px !important;
+}
+
+.swagger-docs-light .swagger-ui textarea.curl {
+  min-height: 100px !important;
+  padding: 12px !important;
+  resize: none !important;
+}
+
+.swagger-docs-light .swagger-ui pre,
+.swagger-docs-light .swagger-ui pre.microlight {
+  padding: 12px !important;
+  margin: 0 !important;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+}
+
+.swagger-docs-light .swagger-ui .opblock .highlight-code pre.microlight span,
+.swagger-docs-light .swagger-ui .opblock pre.microlight span,
+.swagger-docs-light .swagger-ui pre span,
+.swagger-docs-light .swagger-ui .microlight span,
+.swagger-docs-light .swagger-ui code span,
+.swagger-docs-light .swagger-ui .hljs span,
+html.dark .swagger-docs-light .swagger-ui pre span,
+html.dark-mode .swagger-docs-light .swagger-ui pre span,
+html.dark .swagger-docs-light .swagger-ui textarea.curl,
+html.dark-mode .swagger-docs-light .swagger-ui textarea.curl {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #24292e !important;
+  -webkit-text-fill-color: #24292e !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+.swagger-docs-light .swagger-ui .microlight .token.string {
+  color: #032f62 !important;
+  -webkit-text-fill-color: #032f62 !important;
+}
+
+.swagger-docs-light .swagger-ui .microlight .token.number,
+.swagger-docs-light .swagger-ui .microlight .token.boolean,
+.swagger-docs-light .swagger-ui .microlight .token.null {
+  color: #005cc5 !important;
+  -webkit-text-fill-color: #005cc5 !important;
+}

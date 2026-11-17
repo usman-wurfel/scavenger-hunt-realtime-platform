@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  password         String
+  name             String    @default("Admin")
+  profilePhoto     String?
+  tokenVersion     Int       @default(0)
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  deviceId         String?
+  fcmToken         String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model AppSettings {
+  id                 String   @id @default("default")
+  appName            String   @default("Scavenger Hunt")
+  logo               String?
+  favicon            String?
+  applicationLogo    String?
+  playerNearbyRadius Float    @default(100)
+  timezone           String   @default("America/Chicago")
+  copyrightText      String   @default("© 2026 Scavenger Hunt. All rights reserved.")
+  updatedAt          DateTime @updatedAt
+}
+
+model AlertType {
+  id                   String                @id @default(cuid())
+  distanceFt           Float                 @unique
+  message              String
+  messageColor         String                @default("#000000")
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  eventProximityAlerts EventProximityAlert[]
+}
+
+enum EventStatus {
+  SCHEDULED
+  STARTED
+  ENDED
+}
+
+enum PrizeClaimStatus {
+  NONE
+  WAITING
+  CLAIMED
+}
+
+model HuntEvent {
+  id                     String                @id @default(cuid())
+  areaId                 String?
+  area                   HuntArea?             @relation(fields: [areaId], references: [id], onDelete: SetNull)
+  eventName              String
+  location               String
+  latitude               Float
+  longitude              Float
+  eventDate              DateTime              @db.Date
+  eventTime              String
+  timezone               String                @default("Asia/Karachi")
+  eventCode              String                @unique
+  playerClue             String
+  playerNearbyRadius     Float                 @default(100)
+  status                 EventStatus           @default(SCHEDULED)
+  qrCodeUrl              String?
+  startingSoonNotifiedAt DateTime?
+  fiveMinuteNotifiedAt   DateTime?
+  endedAt                DateTime?
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+  proximityAlerts        EventProximityAlert[]
+  participants           HuntParticipant[]
+
+  @@index([areaId])
+}
+
+model HuntArea {
+  id            String                   @id @default(cuid())
+  name          String                   @unique
+  slug          String                   @unique
+  isActive      Boolean                  @default(true)
+  sortOrder     Int                      @default(0)
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+  hunts         HuntEvent[]
+  subscriptions PlayerAreaSubscription[]
+
+  @@index([isActive, sortOrder])
+  @@map("hunt_areas")
+}
+
+model HuntParticipant {
+  id                  String           @id @default(cuid())
+  eventId             String
+  event               HuntEvent        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  deviceId            String
+  username            String           @unique
+  scanRank            Int?
+  scannedAt           DateTime?
+  winnerMessage       String?
+  winnerMessageSentAt DateTime?
+  prizeClaimStatus    PrizeClaimStatus @default(NONE)
+  prizeClaimedAt      DateTime?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  @@unique([eventId, deviceId])
+  @@unique([eventId, scanRank])
+  @@index([eventId])
+}
+
+model ParticipantDevice {
+  id            String   @id @default(cuid())
+  deviceId      String
+  fcmToken      String?
+  participantId String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([deviceId, fcmToken])
+  @@map("participant_devices")
+}
+
+model PlayerAreaSubscription {
+  id        String   @id @default(cuid())
+  deviceId  String
+  areaId    String
+  area      HuntArea @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([deviceId, areaId])
+  @@index([deviceId])
+  @@index([areaId])
+  @@map("player_area_subscriptions")
+}
+
+model EventProximityAlert {
+  id           String    @id @default(cuid())
+  eventId      String
+  event        HuntEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  alertTypeId  String
+  alertType    AlertType @relation(fields: [alertTypeId], references: [id], onDelete: Restrict)
+  distanceFt   Float
+  message      String
+  messageColor String    @default("#000000")
+  sortOrder    Int       @default(0)
+
+  @@unique([eventId, alertTypeId])
+}
