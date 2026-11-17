@@ -144,6 +144,82 @@ Workers:
 
 ---
 
+
+---
+
+## CI / CD & deployment
+
+Production deploys through **GitHub Actions** + **Docker Compose** on the server.
+
+### Pipeline overview
+
+```
+PR / push to main
+        │
+        ▼
+   CI workflow  ──  npm install → prisma generate → lint → next build
+        │
+        │  (only on successful push to main, or manual dispatch)
+        ▼
+   Deploy workflow  ──  SSH → git pull → docker compose build → up -d
+```
+
+| Workflow | Trigger | What it does |
+|----------|---------|--------------|
+| `.github/workflows/ci.yml` | `pull_request` + `push` to `main` | Node 22, install deps, Prisma generate, lint, production `next build` (placeholder env for compile) |
+| `.github/workflows/deploy.yml` | After **CI succeeds** on `main` push, or `workflow_dispatch` | SSH into host, pull `main`, rebuild **all** Compose services, recreate containers (volumes kept) |
+
+Deploy waits for CI via `workflow_run` so a failing build never ships.
+
+### What gets deployed (Compose stack)
+
+| Service | Role |
+|---------|------|
+| `postgres` | Durable hunt / participant data |
+| `redis` | Live presence + BullMQ queues |
+| `emqx` | MQTT broker (GPS / live map) |
+| `app` | Next.js API + admin UI (entrypoint runs Prisma migrate, then `next start`) |
+| hunt-start worker | BullMQ: schedule auto-start + reminders |
+| mqtt-live worker | MQTT → Redis live positions / stats |
+
+App container entrypoint (`scripts/docker-entrypoint.sh`):
+
+1. `prisma migrate deploy` (with safe legacy baseline fallback)
+2. optional seed (`RUN_DB_SEED`)
+3. `next start` on `0.0.0.0:3000`
+
+**Volumes are preserved** on deploy — DB data is not wiped (`docker compose up -d --force-recreate` only recreates containers).
+
+### Required GitHub secrets (Deploy)
+
+| Secret | Purpose |
+|--------|---------|
+| `DEPLOY_HOST` | Production server hostname / IP |
+| `DEPLOY_USER` | SSH user |
+| `DEPLOY_PASSWORD` | SSH password |
+
+Server prerequisites: git repo at deploy path, Docker + Compose, `.env` already on the host (never committed).
+
+### Manual deploy
+
+GitHub → **Actions** → **Deploy** → **Run workflow**, or on the server:
+
+```bash
+git pull origin main
+DOCKER_BUILDKIT=1 docker compose build
+docker compose up -d --remove-orphans --force-recreate
+docker compose ps
+```
+
+### Local / staging parity
+
+```bash
+docker compose up -d
+# rebuild after code changes
+DOCKER_BUILDKIT=1 docker compose build app
+docker compose up -d
+```
+
 ## Local setup
 
 ```bash
